@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "924240392650",
+    "firebase_url": "https://resume-review-d2036.firebaseio.com",
+    "project_id": "resume-review-d2036",
+    "storage_bucket": "resume-review-d2036.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:924240392650:android:fae62ddff50fcba8425f33",
+        "android_client_info": {
+          "package_name": "com.example.resumereview"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "924240392650-u0tb4mbef52ersn4g7g60ulchvmvbudc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdrlqvO9Nm9vOV_nTGrGn0L-r-caDT7p8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "924240392650-u0tb4mbef52ersn4g7g60ulchvmvbudc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
