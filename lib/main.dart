@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
       home: Wrapper(),
       routes: {
         '/homescreen':(ctx)=> HomeScreen(), 
+        '/signin': (ctx)=> SignIn(),
       },
     )),);
   }

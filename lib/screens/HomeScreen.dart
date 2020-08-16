@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
      final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
 
       docurl = (await downloadUrl.ref.getDownloadURL());
-      await firestoreInstance.collection('Resumes').document('pdfs').setData(
+      await firestoreInstance.collection('Resumes').document(uid).setData(
       {
         'score': null,
         'pdf': docurl.toString(),

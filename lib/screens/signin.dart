@@ -1,8 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:resumereview/screens/HomeScreen.dart';
 import 'package:resumereview/services/auth.dart';
 import 'package:resumereview/services/delayed_animation.dart';
 import 'package:avatar_glow/avatar_glow.dart';
-
 
 class SignIn extends StatefulWidget {
   @override
@@ -29,6 +30,12 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
       });
   }
 
+  handleLogin() async {
+    FirebaseUser user = await _auth.signInWithGoogle();
+    Navigator.of(context).pushNamed('/homescreen');
+  }
+
+  bool isauth = false;
   @override
   Widget build(BuildContext context) {
     final color = Colors.white;
@@ -38,7 +45,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
         body: Center(
           child: Column(
             children: <Widget>[
-              SizedBox(height:40),
+              SizedBox(height: 40),
               AvatarGlow(
                 endRadius: 90,
                 duration: Duration(seconds: 2),
@@ -117,16 +124,8 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
   }
 
   Widget get _animatedButtonUI => InkWell(
-      onTap: () async {
-            
-            await _auth.signInWithGoogle();
-            
-            
-            
-            
-
-          },
-      child: Container(
+        onTap: () async {},
+        child: Container(
           height: 60,
           width: 270,
           decoration: BoxDecoration(
@@ -135,19 +134,19 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
           ),
           child: Center(
             child: GestureDetector(
-                          onTap:()=> Navigator.of(context).pushNamed('/homescreen'),
-                          child: Text(
-                  'Login With Google',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF8185E2),
-                  ),
+              onTap: () => handleLogin(),
+              child: Text(
+                'Login With Google',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF8185E2),
                 ),
+              ),
             ),
           ),
         ),
-  );
+      );
 
   void _onTapDown(TapDownDetails details) {
     _controller.forward();
