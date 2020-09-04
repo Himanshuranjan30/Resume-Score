@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:resumereview/models/resume.dart';
+
+import 'package:resumereview/shared/loader.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -16,39 +18,37 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   File file;
   bool isdocselected = false;
+  bool isuploaded=false;
   String docurl;
   DocumentReference docref;
   final firestoreInstance = Firestore.instance;
-  
-  
- 
+  final GlobalKey _LoaderDialog = new GlobalKey();
 
   Future savePdf() async {
-  StorageReference storageReference;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseUser user = await _auth.currentUser();
-  String uid= user.uid.toString();
-  print(uid);
-    storageReference=
-        FirebaseStorage.instance.ref().child(uid);
-     final StorageUploadTask uploadTask = storageReference.putFile(file);
-     final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
+    StorageReference storageReference;
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final FirebaseUser user = await _auth.currentUser();
+    String uid = user.uid.toString();
+    print(uid);
+    storageReference = FirebaseStorage.instance.ref().child(uid);
+    final StorageUploadTask uploadTask = storageReference.putFile(file);
+    final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
 
-      docurl = (await downloadUrl.ref.getDownloadURL());
-      await firestoreInstance.collection('Resumes').document(uid).setData(
+    docurl = (await downloadUrl.ref.getDownloadURL());
+    await firestoreInstance.collection('Resumes').document(uid).setData(
       {
-        'score': null,
+        'score': 'Scoring under Process...',
         'pdf': docurl.toString(),
-        'feedback': null,
-
+        'feedback': 'Feedback under Process,Please hold tight!',
       },
+    ).then((result)=>
+    setState((){
+      isuploaded=true;
+    })
+    
     );
-     
-    
-    
   }
 
-    
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,9 +83,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                      height: 50,
-                      width: 50,
-                      child: Image.asset('assets/profile.png')),
+                        height: 50,
+                        width: 50,
+                        child: Image.asset('assets/profile.png')),
                     Padding(
                       padding: const EdgeInsets.only(top: 30.0),
                       child: Text(
@@ -130,8 +130,8 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.only(top: 8.0),
             child: Column(
               children: <Widget>[
-                cardWidget(context, 'assets/pdf.png', 'Upload pdf',
-                    '*.pdf', '*Size below 1 mb', Colors.green, 'pdf'),
+                cardWidget(context, 'assets/pdf.png', 'Upload pdf', '*.pdf',
+                    '*Size below 1 mb', Colors.green, 'pdf'),
                 Padding(
                   padding: const EdgeInsets.only(top: 12.0),
                 ),
@@ -140,14 +140,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 12.0),
                 ),
-                cardWidget(
-                    context,
-                    'assets/doc.png',
-                    'Upload Word Document',
-                    '*.docx',
-                    '*Size below 1 mb',
-                    Colors.green,
-                    'doc'),
+                cardWidget(context, 'assets/doc.png', 'Upload Word Document',
+                    '*.docx', '*Size below 1 mb', Colors.green, 'doc'),
               ],
             ),
           ),
@@ -165,13 +159,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(color: Colors.white),
                 ),
               ),
-              onPressed: () async=>{ await savePdf(),
-              
+              onPressed: () async {
+                 LoaderDialog.showLoadingDialog(context, _LoaderDialog);
+                await savePdf();
+                Navigator.of(_LoaderDialog.currentContext,rootNavigator: true).pop();
+               AwesomeDialog(
+            context: context,
+            animType: AnimType.SCALE,
+            dialogType: DialogType.SUCCES,
+            body: Center(child: Text(
+                    'Resume Uploaded',
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                  ),),
+            title: 'Success',
+            desc:   '',
+            btnOkOnPress: null,
+                 )..show();
+                
               },
-
               highlightColor: Colors.blue,
             ),
-          )
+          ),
+          
         ],
       ),
     );
@@ -235,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           child: Center(
                             child: Text(
-                             isdocselected?'Selected' :'Select',
+                              isdocselected ? 'Selected' : 'Select',
                               style: TextStyle(
                                   color: Colors.black, fontSize: 12.0),
                             ),
@@ -269,7 +278,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(12.0),
                   color: Colors.grey,
                 ),
-              )
+              ),
+              
             ],
           ),
         ),

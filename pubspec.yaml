@@ -30,6 +30,13 @@ dependencies:
   firebase_storage: ^3.1.6
   cloud_firestore: ^0.13.7
   google_sign_in:
+  persistent_bottom_nav_bar: ^2.0.5
+  awesome_dialog: ^1.2.0
+  flutter_spinkit: ^4.1.2+1
+  google_fonts: ^1.1.0
+  webview_flutter: ^0.3.22+1
+  url_launcher: ^5.5.2
+  
   
 
 
@@ -58,6 +65,11 @@ flutter:
     - assets/jpg.png
     - assets/pdf.png
     - assets/profile.png
+    - assets/loading.png
+    - assets/google.jpg
+    - assets/status.png
+    - assets/score.png
+    - assets/feedback.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

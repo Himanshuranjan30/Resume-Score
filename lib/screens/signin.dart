@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:resumereview/screens/HomeScreen.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:resumereview/services/auth.dart';
 import 'package:resumereview/services/delayed_animation.dart';
 import 'package:avatar_glow/avatar_glow.dart';
@@ -32,7 +32,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
 
   handleLogin() async {
     FirebaseUser user = await _auth.signInWithGoogle();
-    Navigator.of(context).pushNamed('/homescreen');
+    Navigator.of(context).pushNamed('/dashboard');
   }
 
   bool isauth = false;
@@ -67,22 +67,16 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
               DelayedAnimation(
                 child: Text(
                   "Hi There",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 35.0,
-                      color: color),
+                  style: GoogleFonts.abel(fontSize: 35,fontWeight:FontWeight.bold,color: Colors.white)
                 ),
-                delay: delayedAmount + 1000,
+                delay: delayedAmount + 100,
               ),
               DelayedAnimation(
                 child: Text(
                   "I'm Resume Reviewer",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 35.0,
-                      color: color),
+                  style: GoogleFonts.abel(fontSize: 35,fontWeight:FontWeight.bold,color: Colors.white),
                 ),
-                delay: delayedAmount + 2000,
+                delay: delayedAmount + 200,
               ),
               SizedBox(
                 height: 30.0,
@@ -90,16 +84,16 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
               DelayedAnimation(
                 child: Text(
                   "Your New Personal",
-                  style: TextStyle(fontSize: 20.0, color: color),
+                  style: GoogleFonts.abel(fontSize: 20,fontWeight:FontWeight.bold,color: Colors.white),
                 ),
-                delay: delayedAmount + 3000,
+                delay: delayedAmount + 300,
               ),
               DelayedAnimation(
                 child: Text(
                   "Career Companion",
-                  style: TextStyle(fontSize: 20.0, color: color),
+                  style: GoogleFonts.abel(fontSize: 20,fontWeight:FontWeight.bold,color: Colors.white),
                 ),
-                delay: delayedAmount + 3000,
+                delay: delayedAmount + 300,
               ),
               SizedBox(
                 height: 100.0,
@@ -123,30 +117,10 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
         ));
   }
 
-  Widget get _animatedButtonUI => InkWell(
-        onTap: () async {},
-        child: Container(
-          height: 60,
-          width: 270,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100.0),
-            color: Colors.white,
-          ),
-          child: Center(
-            child: GestureDetector(
-              onTap: () => handleLogin(),
-              child: Text(
-                'Login With Google',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF8185E2),
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
+  Widget get _animatedButtonUI => Column(children:[
+    Text('Login',style:TextStyle(fontStyle:FontStyle.normal,fontWeight: FontWeight.bold,color: Colors.white)),
+    SizedBox(height:20)
+    ,GestureDetector(child: Image.asset('assets/google.jpg',height: 50,width: 50,),onTap:()=> handleLogin(),)]);
 
   void _onTapDown(TapDownDetails details) {
     _controller.forward();

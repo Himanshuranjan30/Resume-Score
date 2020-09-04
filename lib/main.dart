@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:resumereview/provider/user.dart';
+import 'package:resumereview/screens/Dashboard.dart';
 import 'package:resumereview/screens/HomeScreen.dart';
 import 'package:resumereview/screens/signin.dart';
 import 'package:resumereview/screens/wrapper.dart';
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/homescreen':(ctx)=> HomeScreen(), 
         '/signin': (ctx)=> SignIn(),
+        '/dashboard':(ctx)=> DashBoard()
       },
     )),);
   }
