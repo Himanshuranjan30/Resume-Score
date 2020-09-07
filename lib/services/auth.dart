@@ -1,4 +1,3 @@
- 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 class AuthService {
@@ -20,6 +19,7 @@ Future<FirebaseUser> signInWithGoogle() async {
 }
 
 void signOutGoogle() async{
+  await _auth.signOut();
   await _googleSignIn.signOut();
 
   print("User Sign Out");

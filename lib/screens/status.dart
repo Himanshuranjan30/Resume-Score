@@ -3,6 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:resumereview/screens/signin.dart';
+
+import 'package:resumereview/services/auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -19,6 +22,7 @@ class _StatusState extends State<Status> {
     uid = user.uid;
   }
 
+  final AuthService _auth = AuthService();
   _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -26,12 +30,21 @@ class _StatusState extends State<Status> {
       throw 'Could not launch $url';
     }
   }
+
+  bool isDocExists = false;
+  checkdoc(String id) async {
+    DocumentSnapshot docSnapshot =
+        await Firestore.instance.collection('Resumes').document(id).get();
+    setState(() {
+      isDocExists = docSnapshot.exists ? true : false;
+    });
+  }
 // Load from assets
 
   @override
   Widget build(BuildContext context) {
     returnuid();
-
+    checkdoc(uid);
     return Scaffold(
       body: Center(
         child: Column(children: [
@@ -112,36 +125,109 @@ class _StatusState extends State<Status> {
             ],
           ),
           SizedBox(height: 40),
-          StreamBuilder(
-              stream: Firestore.instance
-                  .collection('Resumes')
-                  .document(uid)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
-                } else {
-                  print(snapshot.data['feedback']);
-                  print(snapshot.data['pdf']);
-                  return Container(
-                      child: Column(
-                    children: [
-                      Image.asset(
-                        'assets/pdf.png',
-                        height: 50,
-                        width: 50,
-                      ),
-                      SizedBox(height: 3),
-                       FlatButton.icon(onPressed: ()=>_launchURL(snapshot.data['pdf']), icon: Icon(Icons.file_download), label: Text('Show Resume'),color: Colors.blueAccent,),
-                      SizedBox(height:5),
-                      cardWidget(context, 'assets/score.png', 'Score',snapshot.data['score']),
-                      SizedBox(height:8),
-                      cardWidget(context, 'assets/feedback.png', 'Feedback', snapshot.data['feedback']),
-                      
-                    ],
-                  ));
-                }
-              }),
+          isDocExists
+              ? StreamBuilder(
+                  stream: Firestore.instance
+                      .collection('Resumes')
+                      .document(uid)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    print(isDocExists);
+                    if (!snapshot.hasData) {
+                      return Center(child: CircularProgressIndicator());
+                    } else {
+                      print(snapshot.data['feedback']);
+                      print(snapshot.data['pdf']);
+                      return Container(
+                          child: Column(
+                        children: [
+                          Image.asset(
+                            'assets/pdf.png',
+                            height: 50,
+                            width: 50,
+                          ),
+                          SizedBox(height: 3),
+                          FlatButton.icon(
+                            onPressed: () => _launchURL(snapshot.data['pdf']),
+                            icon: Icon(Icons.file_download),
+                            label: Text('Show Resume'),
+                            color: Colors.blueAccent,
+                          ),
+                          SizedBox(height: 5),
+                          cardWidget(context, 'assets/score.png', 'Score',
+                              snapshot.data['score']),
+                          SizedBox(height: 8),
+                          cardWidget(context, 'assets/feedback.png', 'Feedback',
+                              snapshot.data['feedback']),
+                          SizedBox(height: 40),
+                          FlatButton.icon(
+                            onPressed: () => launch(
+                                'https://novoresume.com/resume-templates',
+                                forceWebView: true),
+                            icon: Icon(Icons.show_chart),
+                            label: Text(
+                                'Check out some Professional Resumes here'),
+                            color: Colors.blueAccent,
+                          ),
+                        ],
+                      ));
+                    }
+                  })
+              : Center(
+                  child: Column(
+                  children: [
+                    Image.asset('assets/pdf.png', height: 100),
+                    SizedBox(height: 30),
+                    Text('No resume uploaded!',
+                        style: GoogleFonts.abel(
+                            fontSize: 25, fontWeight: FontWeight.bold)),
+                    Text('Please Upload one to get it reviewed.',
+                        style: GoogleFonts.abel(
+                            fontSize: 25, fontWeight: FontWeight.bold)),
+                    SizedBox(height: 150),
+                    Card(
+                        child: Column(
+                      children: [
+                        Text(
+                          'Instructions for Uploading a Resume:',
+                          style: GoogleFonts.aBeeZee(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          '-Upload only 1 resume at a time.',
+                          style: GoogleFonts.aBeeZee(),
+                        ),
+                        Text(
+                          '-Change Resume by Uploading the new document again',
+                          style: GoogleFonts.aBeeZee(),
+                        ),
+                        Text(
+                          '-Your Resume will be Reviewed within 2 days.',
+                          style: GoogleFonts.aBeeZee(),
+                        ),
+                        Text(
+                          '-The Review is automated.',
+                          style: GoogleFonts.aBeeZee(),
+                        ),
+                        Text(
+                          '-Crossed reviewed by one of our Career Professionals',
+                          style: GoogleFonts.aBeeZee(),
+                        ),
+                      ],
+                    )),
+                  ],
+                )),
+          FlatButton.icon(
+              onPressed: () => {
+                    
+                    _auth.signOutGoogle(),
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>  SignIn()))
+                  },
+              icon: Icon(Icons.exit_to_app),
+              label: Text('Sign Out'))
         ]),
       ),
     );
@@ -195,11 +281,7 @@ class BlackClipper extends CustomClipper<Path> {
 }
 
 Widget cardWidget(
-  BuildContext context,
-  String image,
-  String param,
-  String value
-) {
+    BuildContext context, String image, String param, String value) {
   return Material(
     elevation: 2.0,
     borderRadius: BorderRadius.circular(18.0),
@@ -220,7 +302,7 @@ Widget cardWidget(
                 children: <Widget>[
                   ListTile(
                     title: Text(
-                      param+':'+ ' '+ value,
+                      param + ':' + ' ' + value,
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -238,7 +320,6 @@ Widget cardWidget(
                 ],
               ),
             ),
-            
             Container(
               width: 5.0,
               height: 45.0,

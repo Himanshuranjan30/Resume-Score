@@ -21,7 +21,7 @@ class DashBoard extends StatelessWidget {
                 inactiveColor: Colors.grey,
             ),
             PersistentBottomNavBarItem(
-                icon: Icon(Icons.settings),
+                icon: Icon(Icons.account_circle),
                 title: ("Status"),
                 activeColor: Colors.blue,
                 inactiveColor: Colors.grey,
@@ -31,7 +31,7 @@ class DashBoard extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return PersistentTabView(
+    return Scaffold(body:PersistentTabView(
       controller: _controller,
       screens: _buildScreens(),
       items: _navBarsItems(),
@@ -56,7 +56,7 @@ class DashBoard extends StatelessWidget {
         duration: Duration(milliseconds: 200),
       ),
       navBarStyle: NavBarStyle.style1, // Choose the nav bar style with this property.
-    );
+    ));
   }
 }
   
