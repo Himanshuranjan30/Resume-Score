@@ -19,7 +19,7 @@ Future<FirebaseUser> signInWithGoogle() async {
 }
 
 void signOutGoogle() async{
-  await _auth.signOut();
+  
   await _googleSignIn.signOut();
 
   print("User Sign Out");
@@ -27,14 +27,5 @@ void signOutGoogle() async{
 
 
   // sign in anon
-  Future signInAnon() async {
-    try {
-      AuthResult result = await _auth.signInAnonymously();
-      FirebaseUser user = result.user;
-      return user;
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
+  
 }

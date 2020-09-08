@@ -66,14 +66,14 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
               ),
               DelayedAnimation(
                 child: Text(
-                  "Hi There",
+                  "Hi There!",
                   style: GoogleFonts.abel(fontSize: 35,fontWeight:FontWeight.bold,color: Colors.white)
                 ),
                 delay: delayedAmount + 100,
               ),
               DelayedAnimation(
                 child: Text(
-                  "I'm Resume Reviewer",
+                  "I'm Resume.io",
                   style: GoogleFonts.abel(fontSize: 35,fontWeight:FontWeight.bold,color: Colors.white),
                 ),
                 delay: delayedAmount + 200,
@@ -83,7 +83,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
               ),
               DelayedAnimation(
                 child: Text(
-                  "Your New Personal",
+                  "Your Personal",
                   style: GoogleFonts.abel(fontSize: 20,fontWeight:FontWeight.bold,color: Colors.white),
                 ),
                 delay: delayedAmount + 300,
@@ -118,8 +118,8 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
   }
 
   Widget get _animatedButtonUI => Column(children:[
-    Text('Login',style:TextStyle(fontStyle:FontStyle.normal,fontWeight: FontWeight.bold,color: Colors.white)),
-    SizedBox(height:20)
+    Text('Login',style:GoogleFonts.abel(fontStyle:FontStyle.normal,fontWeight: FontWeight.bold,color: Colors.white)),
+    SizedBox(height:5)
     ,GestureDetector(child: Image.asset('assets/google.jpg',height: 50,width: 50,),onTap:()=> handleLogin(),)]);
 
   void _onTapDown(TapDownDetails details) {

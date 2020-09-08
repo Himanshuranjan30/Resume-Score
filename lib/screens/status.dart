@@ -2,6 +2,7 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:resumereview/screens/signin.dart';
 
@@ -221,13 +222,11 @@ class _StatusState extends State<Status> {
               onPressed: () => {
                     
                     _auth.signOutGoogle(),
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>  SignIn()))
+                     Navigator.of(context, rootNavigator: true).pushReplacement(
+            MaterialPageRoute(builder: (context) => SignIn()))
                   },
               icon: Icon(Icons.exit_to_app),
-              label: Text('Sign Out'))
+              label: Text('Sign Out and Exit'))
         ]),
       ),
     );

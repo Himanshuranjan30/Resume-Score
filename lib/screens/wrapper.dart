@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:resumereview/provider/user.dart';
+import 'package:resumereview/screens/Dashboard.dart';
 import 'package:resumereview/screens/signin.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +16,11 @@ class Wrapper extends StatelessWidget {
     print(user);
     
     // return either the Home or Authenticate widget
-    return SignIn();
+    if(user==null)
+      return SignIn();
+    else
+      return DashBoard();
+
 
   }
 }
