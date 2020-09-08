@@ -226,7 +226,7 @@ class _StatusState extends State<Status> {
             MaterialPageRoute(builder: (context) => SignIn()))
                   },
               icon: Icon(Icons.exit_to_app),
-              label: Text('Sign Out and Exit'))
+              label: Text('Sign Out'))
         ]),
       ),
     );
