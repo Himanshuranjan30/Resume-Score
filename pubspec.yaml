@@ -36,6 +36,7 @@ dependencies:
   google_fonts: ^1.1.0
   webview_flutter: ^0.3.22+1
   url_launcher: ^5.5.2
+  async_loader: ^0.1.2
   
   
 

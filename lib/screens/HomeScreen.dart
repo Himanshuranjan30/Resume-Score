@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:resumereview/shared/loader.dart';
 
@@ -19,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   File file;
   bool isdocselected = false;
   bool isuploaded=false;
+  bool isloading=false;
   String docurl;
   DocumentReference docref;
   final firestoreInstance = Firestore.instance;
@@ -51,7 +53,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
   Widget build(BuildContext context) {
-    return Scaffold(
+    return isloading==true?Container(
+      height: 50,
+      width: 50,
+      child: SpinKitSquareCircle(
+  color: Colors.blue,
+  size: 50.0,
+  
+),
+    ): Scaffold(
       body: Column(
         children: <Widget>[
           Stack(
@@ -160,9 +170,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               onPressed: () async {
-                 LoaderDialog.showLoadingDialog(context, _LoaderDialog);
+                 setState(() {
+                   isloading=true;
+                 });
                 await savePdf();
-                Navigator.of(_LoaderDialog.currentContext,rootNavigator: true).pop();
+                setState(() {
+                  isloading=false;
+                });
+                
                AwesomeDialog(
             context: context,
             animType: AnimType.SCALE,
@@ -239,7 +254,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               allowedExtensions: [type],
                             );
                             setState(() {
-                              isdocselected = true;
+                              if(file!=null)
+                                 isdocselected = true;
                             });
                           },
                           child: Center(
